@@ -1,4 +1,11 @@
+import Scanner from "./Scanner";
+import { useState } from "react";
+
+
 const Contents = () => {
+  const [scanStartOn, setScanStartOn] = useState(false);
+
+
   return (
     <>
       <div className="grid grid-cols-2 gap-5">
@@ -19,7 +26,7 @@ const Contents = () => {
           </svg>
           <p>読んだ本</p>
         </div>
-        <button>
+        <button onClick={() => setScanStartOn(true)}>
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +69,7 @@ const Contents = () => {
           </svg>
           <p>読みたい本</p>
         </div>
-        <button>
+        <button onClick={() => setScanStartOn(true)}>
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +94,7 @@ const Contents = () => {
           </div>
         </button>
       </div>
+      <Scanner scanStartOn={scanStartOn}/>
     </>
   );
 };
