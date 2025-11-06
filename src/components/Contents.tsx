@@ -94,7 +94,10 @@ const Contents = () => {
           </div>
         </button>
       </div>
-      <Scanner scanStartOn={scanStartOn}/>
+      {scanStartOn && (
+      <Scanner scanStartOn={scanStartOn}
+      onClose={() => setScanStartOn(false)}/>
+      )}
     </>
   );
 };
