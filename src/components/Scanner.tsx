@@ -51,11 +51,11 @@ const Scanner = ({scanStartOn, onClose}:ScannerProps) => {
 
   return (
     <div className="fixed inset-0 bg-white flex-col items-center justify-center">
-      <div id="reader" ref={readerRef} style={{ width: "300px", height: "300px" }}></div>
+      <div id="reader" ref={readerRef} style={{ objectFit: "cover" }}></div>
 
       {isbn ? (
         <div className="mt-4 text-center">
-          <p>スキャン結果: <String>{isbn}</String></p>
+          <p>スキャン結果: {isbn}</p>
           <button onClick={onClose}
           className="mt-2 bg-green-500 text-white px-4 py-2 rounded">閉じる</button>
       </div>
