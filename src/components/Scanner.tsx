@@ -27,7 +27,7 @@ const Scanner = ({scanStartOn, onClose}:ScannerProps) => {
         ],
       };
 
-      const qrCodeSuccessCallback = (decodedText: string, decodedResult? :any) => {
+      const qrCodeSuccessCallback = (decodedText: string) => {
         console.log("ISBN検出:", decodedText);
         setIsbn(decodedText);
         html5QrCode.stop().catch((e) => console.warn("stop error:", e));
