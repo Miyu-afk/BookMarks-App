@@ -1,8 +1,12 @@
 import Scanner from "./Scanner";
 import { useState } from "react";
+import type { Dispatch, SetStateAction } from 'react'
 
+interface ContentsProps{
+  setGetIsbn:Dispatch<SetStateAction<string | null>>;
+}
 
-const Contents = () => {
+const Contents = ({setGetIsbn}:ContentsProps) => {
   const [scanStartOn, setScanStartOn] = useState(false);
 
 
@@ -96,6 +100,7 @@ const Contents = () => {
       </div>
       {scanStartOn && (
       <Scanner scanStartOn={scanStartOn}
+      setGetIsbn={setGetIsbn}
       onClose={() => setScanStartOn(false)}/>
       )}
     </>

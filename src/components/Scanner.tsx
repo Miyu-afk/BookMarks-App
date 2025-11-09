@@ -1,16 +1,20 @@
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { useEffect, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from 'react'
 
 interface ScannerProps {
   scanStartOn: boolean;
   onClose: () => void;
+  setGetIsbn:Dispatch<SetStateAction<string | null>>;
+  
 }
 
-const Scanner = ({scanStartOn, onClose}:ScannerProps) => {
+const Scanner = ({scanStartOn, onClose, setGetIsbn}:ScannerProps) => {
   const [isbn, setIsbn] = useState<string | null>(null);
   const readerRef = useRef<HTMLDivElement>(null);
   const html5QrCodeRef = useRef<Html5Qrcode | null>(null);
-  
+  setGetIsbn(isbn);
+
   useEffect(() => {
     if(!scanStartOn || !readerRef.current) return;
     
