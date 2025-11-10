@@ -4,9 +4,10 @@ import type { Dispatch, SetStateAction } from 'react'
 
 interface ContentsProps{
   setGetIsbn:Dispatch<SetStateAction<string | null>>;
+  book:string;
 }
 
-const Contents = ({setGetIsbn}:ContentsProps) => {
+const Contents = ({setGetIsbn, book}:ContentsProps) => {
   const [scanStartOn, setScanStartOn] = useState(false);
 
 
@@ -54,6 +55,7 @@ const Contents = ({setGetIsbn}:ContentsProps) => {
             <p>ISBNを取得する</p>
           </div>
         </button>
+        <p>{book}</p>
       </div>
       <div className="grid grid-cols-2 gap-5">
         <div className="flex">
