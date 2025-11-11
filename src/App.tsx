@@ -4,32 +4,39 @@ import React, { useEffect, useState } from "react";
 import BookMarksMain from "./components/BookMarksMain";
 import { saveBookToFireStore } from "./lib/savebook";
 import axios from "axios";
+import { parseStringPromise } from "xml2js";
 
 const App: React.FC = () => {
-  const [getIsbn, setGetIsbn] = useState<string | null>("")
+  const [getIsbn, setGetIsbn] = useState<string | null>("");
   const [book, setBook] = useState("");
 
   useEffect(() => {
-    if(getIsbn){
+    if (getIsbn) {
       saveBookToFireStore(getIsbn);
     }
   }, [getIsbn]);
 
-  useEffect(()=> {
-  axios.get(`https://ndlsearch.ndl.go.jp/search?cs=bib&display=panel&from=0&size=20&keyword=${getIsbn}&f-ht=ndl&f-ht=library`)
-    .then((results)=>{
-      console.log(results.data);
-      setBook(results.data.results[0])
-    })
-    .catch((error) => {
-      console.log('失敗');
-      console.log(error.status);
-    });
-});
+  useEffect(() => {
+    if (!getIsbn) return;
+
+    axios
+      .get(
+        `https://ndlsearch.ndl.go.jp/opensearch?isbn=${getIsbn}`)
+      .then(async(results) => {
+        const jsonData = await parseStringPromise(results.data);
+        console.log(jsonData);
+        const bookData = jsonData.feed.entry?.[0];
+        setBook(bookData?.title?.[0] || "タイトル不明");
+      })
+      .catch((error) => {
+        console.log("国立図書館APIエラー:");
+        console.log(error.status);
+      });
+  }, [getIsbn]);
   return (
     // <Routes>
-      <BookMarksMain setGetIsbn={setGetIsbn} book={book}/>
-      /* <Route path="/" element={<Login />} /> */
+    <BookMarksMain setGetIsbn={setGetIsbn} book={book} />
+    /* <Route path="/" element={<Login />} /> */
     // </Routes>
   );
 };
