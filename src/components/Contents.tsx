@@ -1,6 +1,7 @@
 import Scanner from "./Scanner";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from 'react'
+import { saveBookToFireStore } from "../lib/savebook";
 
 interface ContentsProps{
   setGetIsbn:Dispatch<SetStateAction<string | null>>;
@@ -9,7 +10,7 @@ interface ContentsProps{
 
 const Contents = ({setGetIsbn, book}:ContentsProps) => {
   const [scanStartOn, setScanStartOn] = useState(false);
-
+  const [scanType, setScanType] = useState<"want" | "read" | null>(null);
 
   return (
     <>
@@ -31,7 +32,9 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
           </svg>
           <p>読んだ本</p>
         </div>
-        <button onClick={() => setScanStartOn(true)}>
+        <button onClick={() => {
+          setScanType("read")
+          setScanStartOn(true)}}>
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +78,9 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
           </svg>
           <p>読みたい本</p>
         </div>
-        <button onClick={() => setScanStartOn(true)}>
+        <button onClick={() => {
+          setScanType("want");
+          setScanStartOn(true)}}>
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +108,9 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
       {scanStartOn && (
       <Scanner scanStartOn={scanStartOn}
       setGetIsbn={setGetIsbn}
-      onClose={() => setScanStartOn(false)}/>
+      scanType = {scanType}
+      onClose={() => setScanStartOn(false)}
+      onDetect={(isbn, type) => saveBookToFireStore(isbn, type)}/>
       )}
     </>
   );
