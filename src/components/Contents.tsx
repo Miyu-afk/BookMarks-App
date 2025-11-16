@@ -109,8 +109,7 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
       <Scanner scanStartOn={scanStartOn}
       setGetIsbn={setGetIsbn}
       scanType = {scanType}
-      onClose={() => setScanStartOn(false)}
-      onDetect={(isbn, type) => saveBookToFireStore(isbn, type)}/>
+      onClose={() => setScanStartOn(false)}/>
       )}
     </>
   );

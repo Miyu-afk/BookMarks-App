@@ -1,14 +1,12 @@
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { useEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from 'react'
-import Quagga from "quagga";
 
 interface ScannerProps {
   scanStartOn: boolean;
   onClose: () => void;
   scanType: "want" | "read" | null;
   setGetIsbn:Dispatch<SetStateAction<string | null>>;
-  onDetect: (isbn: string, scanType: "want" | "read")=>void;
 }
 
 const Scanner = ({scanStartOn, onClose, setGetIsbn}:ScannerProps) => {
@@ -25,7 +23,7 @@ const Scanner = ({scanStartOn, onClose, setGetIsbn}:ScannerProps) => {
     
     const config = {
       fps: 1,
-      qrbox: { width: 250, height: 250 },
+      qrbox: { width: 250, height: 125 },
       formatsToSupport: [
           Html5QrcodeSupportedFormats.EAN_13,
           Html5QrcodeSupportedFormats.EAN_8,

@@ -19,25 +19,44 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!getIsbn) return;
 
-    axios
-      .get(
-        `https://ndlsearch.ndl.go.jp/opensearch?isbn=${getIsbn}`)
-      .then(async(results) => {
-        const jsonData = await parseStringPromise(results.data);
-        console.log(jsonData);
-        const bookData = jsonData.feed.entry?.[0];
+    const fetchNDL = async() => {
+      try{
+        const res = await fetch(`/api/ndl?isbn=${getIsbn}`)
+        const xml = await res.text();
+        console.log(xml);
+
+        const json = await parseStringPromise(xml);
+        console.log("NDL JSON:", json);
+
+        const bookData = json.feed?.entry?.[0];
         setBook(bookData?.title?.[0] || "タイトル不明");
-      })
-      .catch((error) => {
-        console.log("国立図書館APIエラー:");
-        console.log(error.status);
-      });
+
+      } catch(error){
+        console.error("NDL API error:", error);
+      }
+    };
+
+    fetchNDL();
+  
+    // axios
+    //   .get(
+    //     `https://ndlsearch.ndl.go.jp/opensearch?isbn=${getIsbn}`)
+    //   .then(async(results) => {
+    //     const jsonData = await parseStringPromise(results.data);
+    //     console.log(jsonData);
+    //     const bookData = jsonData.feed.entry?.[0];
+    //     setBook(bookData?.title?.[0] || "タイトル不明");
+    //   })
+    //   .catch((error) => {
+    //     console.log("国立図書館APIエラー:");
+    //     console.log(error.status);
+    //   });
   }, [getIsbn]);
   return (
-    // <Routes>
+    <>
     <BookMarksMain setGetIsbn={setGetIsbn} book={book} />
-    /* <Route path="/" element={<Login />} /> */
-    // </Routes>
+    {/* <Route path="/" element={<Login />} /> */}
+    </>
   );
 };
 
