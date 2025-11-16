@@ -1,7 +1,6 @@
 import Scanner from "./Scanner";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from 'react'
-import { saveBookToFireStore } from "../lib/savebook";
 
 interface ContentsProps{
   setGetIsbn:Dispatch<SetStateAction<string | null>>;
