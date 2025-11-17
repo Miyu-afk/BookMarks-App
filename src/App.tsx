@@ -18,25 +18,35 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (!getIsbn) return;
-
-    const fetchNDL = async() => {
-      try{
-        const res = await fetch(`/api/ndl?isbn=${getIsbn}`)
-        const xml = await res.text();
-        console.log(xml);
-
-        const json = await parseStringPromise(xml);
-        console.log("NDL JSON:", json);
-
-        const bookData = json.feed?.entry?.[0];
-        setBook(bookData?.title?.[0] || "タイトル不明");
-
-      } catch(error){
-        console.error("NDL API error:", error);
-      }
+    const fetchBook = async (getIsbn:string) => {
+      const res = await fetch(`/api/book?isbn=${getIsbn}`);
+      const data = await res.json();
+      return data;
+    }
+    const run = async() => {
+      const book = await fetchBook(getIsbn);
+      console.log(book);
+      setBook(book);
     };
+    run();
+    // const fetchNDL = async() => {
+    //   try{
+    //     const res = await fetch(`/api/ndl?isbn=${getIsbn}`)
+    //     const xml = await res.text();
+    //     console.log(xml);
 
-    fetchNDL();
+    //     const json = await parseStringPromise(xml);
+    //     console.log("NDL JSON:", json);
+
+    //     const bookData = json.feed?.entry?.[0];
+    //     setBook(bookData?.title?.[0] || "タイトル不明");
+
+    //   } catch(error){
+    //     console.error("NDL API error:", error);
+    //   }
+    // };
+
+    // fetchNDL();
   
     // axios
     //   .get(
