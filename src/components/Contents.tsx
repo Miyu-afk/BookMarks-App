@@ -1,15 +1,18 @@
 import Scanner from "./Scanner";
 import { useState } from "react";
-import type { Dispatch, SetStateAction } from 'react'
+import type { Dispatch, SetStateAction } from "react";
 
-interface ContentsProps{
-  setGetIsbn:Dispatch<SetStateAction<string | null>>;
-  book:string;
+interface ContentsProps {
+  setGetIsbn: Dispatch<SetStateAction<string | null>>;
+  book: string;
 }
 
-const Contents = ({setGetIsbn, book}:ContentsProps) => {
+const Contents = ({ setGetIsbn, book }: ContentsProps) => {
   const [scanStartOn, setScanStartOn] = useState(false);
   const [scanType, setScanType] = useState<"want" | "read" | null>(null);
+
+  const [readBooks, setReadBooks] = useState([]);
+  const [wantBooks, setWantBooks] = useState([]);
 
   return (
     <>
@@ -31,9 +34,12 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
           </svg>
           <p>読んだ本</p>
         </div>
-        <button onClick={() => {
-          setScanType("read")
-          setScanStartOn(true)}}>
+        <button
+          onClick={() => {
+            setScanType("read");
+            setScanStartOn(true);
+          }}
+        >
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -77,9 +83,12 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
           </svg>
           <p>読みたい本</p>
         </div>
-        <button onClick={() => {
-          setScanType("want");
-          setScanStartOn(true)}}>
+        <button
+          onClick={() => {
+            setScanType("want");
+            setScanStartOn(true);
+          }}
+        >
           <div className="flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -105,10 +114,12 @@ const Contents = ({setGetIsbn, book}:ContentsProps) => {
         </button>
       </div>
       {scanStartOn && (
-      <Scanner scanStartOn={scanStartOn}
-      setGetIsbn={setGetIsbn}
-      scanType = {scanType}
-      onClose={() => setScanStartOn(false)}/>
+        <Scanner
+          scanStartOn={scanStartOn}
+          setGetIsbn={setGetIsbn}
+          scanType={scanType}
+          onClose={() => setScanStartOn(false)}
+        />
       )}
     </>
   );
