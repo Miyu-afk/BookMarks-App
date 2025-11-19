@@ -14,6 +14,11 @@ const Contents = ({ setGetIsbn, book }: ContentsProps) => {
   const [readBooks, setReadBooks] = useState([]);
   const [wantBooks, setWantBooks] = useState([]);
 
+  const handleGetIsbn = async (isbn:string | null) => {
+    if(!isbn) return;
+
+    const bookInfo = await fetchBookInfo(isbn);
+  }
   return (
     <>
       <div className="grid grid-cols-2 gap-5">
