@@ -4,11 +4,18 @@ import React, { useEffect, useState } from "react";
 import BookMarksMain from "./components/BookMarksMain";
 import { saveBookToFireStore } from "./lib/savebook";
 
-import { parseStringPromise } from "xml2js";
+interface BookData{
+  title: string;
+  author: string;
+  publisher: string;
+  cover: string;
+  isbn: string;
+}
 
 const App: React.FC = () => {
   const [getIsbn, setGetIsbn] = useState<string | null>("");
   const [book, setBook] = useState("");
+  const [scanType, setScanType] = useState<"want" | "read" | "">("");
 
   useEffect(() => {
     if (getIsbn) {
@@ -17,7 +24,7 @@ const App: React.FC = () => {
   }, [getIsbn]);
 
   useEffect(() => {
-    if (!getIsbn) return;
+    if (!getIsbn || !scanType) return;
     const fetchBook = async (getIsbn:string) => {
       const res = await fetch(`/api/book?isbn=${getIsbn}`);
       const data = await res.json();
@@ -29,38 +36,6 @@ const App: React.FC = () => {
       setBook(book);
     };
     run();
-    // const fetchNDL = async() => {
-    //   try{
-    //     const res = await fetch(`/api/ndl?isbn=${getIsbn}`)
-    //     const xml = await res.text();
-    //     console.log(xml);
-
-    //     const json = await parseStringPromise(xml);
-    //     console.log("NDL JSON:", json);
-
-    //     const bookData = json.feed?.entry?.[0];
-    //     setBook(bookData?.title?.[0] || "タイトル不明");
-
-    //   } catch(error){
-    //     console.error("NDL API error:", error);
-    //   }
-    // };
-
-    // fetchNDL();
-  
-    // axios
-    //   .get(
-    //     `https://ndlsearch.ndl.go.jp/opensearch?isbn=${getIsbn}`)
-    //   .then(async(results) => {
-    //     const jsonData = await parseStringPromise(results.data);
-    //     console.log(jsonData);
-    //     const bookData = jsonData.feed.entry?.[0];
-    //     setBook(bookData?.title?.[0] || "タイトル不明");
-    //   })
-    //   .catch((error) => {
-    //     console.log("国立図書館APIエラー:");
-    //     console.log(error.status);
-    //   });
   }, [getIsbn]);
   return (
     <>
