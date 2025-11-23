@@ -2,18 +2,27 @@ import Scanner from "./Scanner";
 import { useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
-interface ContentsProps {
-  setGetIsbn: Dispatch<SetStateAction<string | null>>;
-  book: string;
+interface BookData{
+  title: string;
+  author: string;
+  publisher: string;
+  cover: string;
+  isbn: string;
 }
 
-const Contents = ({ setGetIsbn, book }: ContentsProps) => {
+interface ContentsProps {
+  setGetIsbn: Dispatch<SetStateAction<string | null>>;
+  book: BookData | null;
+  setScanType: (t: "want" | "read") => void;
+}
+
+const Contents = ({ setGetIsbn, book, setScanType }: ContentsProps) => {
   const [scanStartOn, setScanStartOn] = useState(false);
-  const [scanType, setScanType] = useState<"want" | "read" | null>(null);
 
-  const [readBooks, setReadBooks] = useState([]);
-  const [wantBooks, setWantBooks] = useState([]);
-
+  const startScan = (type: "want" | "read") => {
+    setScanType(type);
+    setGetIsbn("scanning");
+  }
 
   return (
     <>
@@ -36,10 +45,9 @@ const Contents = ({ setGetIsbn, book }: ContentsProps) => {
           <p>読んだ本</p>
         </div>
         <button
-          onClick={() => {
-            setScanType("read");
-            setScanStartOn(true);
-          }}
+          onClick={() => 
+            startScan("want")
+          }
         >
           <div className="flex">
             <svg
@@ -64,7 +72,7 @@ const Contents = ({ setGetIsbn, book }: ContentsProps) => {
             <p>ISBNを取得する</p>
           </div>
         </button>
-        <p>{book}</p>
+        <p>{book ? `${book.title}` : "まだ読み込まれていません。"}</p>
       </div>
       <div className="grid grid-cols-2 gap-5">
         <div className="flex">
@@ -85,10 +93,9 @@ const Contents = ({ setGetIsbn, book }: ContentsProps) => {
           <p>読みたい本</p>
         </div>
         <button
-          onClick={() => {
-            setScanType("want");
-            setScanStartOn(true);
-          }}
+          onClick={() => 
+            startScan("read")
+          }
         >
           <div className="flex">
             <svg
@@ -118,7 +125,6 @@ const Contents = ({ setGetIsbn, book }: ContentsProps) => {
         <Scanner
           scanStartOn={scanStartOn}
           setGetIsbn={setGetIsbn}
-          scanType={scanType}
           onClose={() => setScanStartOn(false)}
         />
       )}

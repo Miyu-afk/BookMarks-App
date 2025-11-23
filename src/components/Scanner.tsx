@@ -5,7 +5,6 @@ import type { Dispatch, SetStateAction } from "react";
 interface ScannerProps {
   scanStartOn: boolean;
   onClose: () => void;
-  scanType: "want" | "read" | null;
   setGetIsbn: Dispatch<SetStateAction<string | null>>;
 }
 
