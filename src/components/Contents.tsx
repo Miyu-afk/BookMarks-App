@@ -21,6 +21,7 @@ const Contents = ({ setGetIsbn, book, setScanType }: ContentsProps) => {
 
   const startScan = (type: "want" | "read") => {
     setScanType(type);
+    setScanStartOn(true);
   }
 
   return (
