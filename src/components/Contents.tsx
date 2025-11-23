@@ -21,7 +21,6 @@ const Contents = ({ setGetIsbn, book, setScanType }: ContentsProps) => {
 
   const startScan = (type: "want" | "read") => {
     setScanType(type);
-    setGetIsbn("scanning");
   }
 
   return (
@@ -69,6 +68,7 @@ const Contents = ({ setGetIsbn, book, setScanType }: ContentsProps) => {
                 d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
               />
             </svg>
+            {book && <img src={book.cover} alt={book.title} />}
             <p>ISBNを取得する</p>
           </div>
         </button>
