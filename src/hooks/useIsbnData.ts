@@ -81,7 +81,7 @@ export function useIsbnData(isbn: string | null) {
             authors: v.authors,
             publisher: v.publisher,
             publishedDate: v.publishedDate,
-            cover: v.imageLinks.thumbnail,
+            cover: v.imageLinks.thumbnail ? v.imageLinks.thumbnail.replace("http://", "https://") : null,
           });
           return;
         }
