@@ -1,26 +1,35 @@
-import { collection, addDoc, Timestamp, doc, setDoc, getDoc } from "firebase/firestore";
+import { Timestamp, doc, setDoc, getDoc } from "firebase/firestore";
 import{ db } from "./firabase";
 
-export const saveBookToFireStore = async (isbn: string) => {
+interface BookDataForSave{
+  isbn: string;
+  title: string | null;
+  cover: string | null;
+}
+
+export const saveBookToFireStore = async (book:BookDataForSave) => {
+  const { isbn, title, cover } = book;
+
   if(!isbn) return;
 
   const bookRef = doc(db, "books", isbn);
   const existing = await getDoc(bookRef);
 
   if(!existing.exists()){
-    await setDoc(bookRef, { isbn, addedAt: new Date()});
-    console.log("Firestoreに保存しました;", isbn);
-  } else {
-    console.log("すでに保存済み:", isbn);
-  }
-  
-  try {
-    await addDoc(collection(db, "books"), {
+    await setDoc(bookRef, { 
       isbn,
-      createdAt:Timestamp.now(),
-    });
-    console.log("Firestoreに保存しました:", isbn);
-  }catch (error){
-    console.error("Firestore保存エラー:", error);
+      title,
+      cover,
+      addedAt: Timestamp.now()});
+    console.log("Firestoreに新規保存しました;", isbn);
+  } else {
+    await setDoc(
+      bookRef, {
+        title: title ?? existing.data().title,
+        cover: cover ?? existing.data().cover,
+      },
+      { merge: true}
+    );
+    console.log("既存データを更新しました。:", isbn);
   }
 };

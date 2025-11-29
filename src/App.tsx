@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 // import Login from "./accounts/LogIn";
 import BookMarksMain from "./components/BookMarksMain";
 import { saveBookToFireStore } from "./lib/savebook";
+import { useIsbnData } from "./hooks/useIsbnData";
 
-
-interface BookData{
+interface BookData {
   title: string;
   author: string;
   publisher: string;
@@ -18,36 +18,36 @@ const App: React.FC = () => {
   const [book, setBook] = useState<BookData | null>(null);
   const [scanType, setScanType] = useState<"want" | "read" | "">("");
 
+  const { data } = useIsbnData(getIsbn);
+
   useEffect(() => {
-    if (!getIsbn || !scanType) return;
-    const fetchBook = async () => {
-      const res = await fetch(`/api/book?isbn=${getIsbn}`);
-      const data = await res.json();
-      const info = data[0]?.summary;
-      if (!info) return;
+    if (!data || !getIsbn || !scanType) return;
 
-      const bookData:BookData = {
-        title:info.title,
-        author: info.author,
-        publisher: info.publisher,
-        cover: info.cover,
-        isbn: getIsbn,
-      };
-
-      setBook(bookData);
-
-      saveBookToFireStore(getIsbn);
-
-
+    const bookData: BookData = {
+      title: data.title ?? null,
+      author: data.author ?? null,
+      publisher: data.publisher ?? null,
+      cover: data.cover ?? null,
+      isbn: getIsbn,
     };
 
-    fetchBook();
-  }, [getIsbn, scanType]);
+    setBook(bookData);
+
+    saveBookToFireStore({
+      isbn: bookData.isbn,
+      title: bookData.title,
+      cover: bookData.cover,
+    });
+  }, [data, getIsbn, scanType]);
 
   return (
     <>
-    <BookMarksMain setGetIsbn={setGetIsbn} book={book} setScanType={setScanType} />
-    {/* <Route path="/" element={<Login />} /> */}
+      <BookMarksMain
+        setGetIsbn={setGetIsbn}
+        book={book}
+        setScanType={setScanType}
+      />
+      {/* <Route path="/" element={<Login />} /> */}
     </>
   );
 };
