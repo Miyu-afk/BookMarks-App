@@ -30,9 +30,9 @@ const Scanner = ({ scanStartOn, onClose, setGetIsbn }: ScannerProps) => {
     };
 
     const qrCodeSuccessCallback = (decodedText: string) => {
-      console.log("ISBN検出:", decodedText);
       setIsbn(decodedText);
       setGetIsbn(decodedText);
+      onClose();
     };
 
     const qrCodeErrorCallback = (errorMessage: string) => {
