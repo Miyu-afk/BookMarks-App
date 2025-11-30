@@ -1,4 +1,8 @@
-import { Html5Qrcode, Html5QrcodeScannerState, Html5QrcodeSupportedFormats } from "html5-qrcode";
+import {
+  Html5Qrcode,
+  Html5QrcodeScannerState,
+  Html5QrcodeSupportedFormats,
+} from "html5-qrcode";
 import { useEffect, useRef, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
@@ -45,11 +49,20 @@ const Scanner = ({ scanStartOn, onClose, setGetIsbn }: ScannerProps) => {
       .catch((err) => console.error("スキャン開始エラー:", err));
 
     return () => {
-      const state = html5QrCode.getState();
-      if(state === Html5QrcodeScannerState.SCANNING){
-        html5QrCode.stop().catch(() => {});
-      }
-      html5QrCode.clear();
+      const html5QrCode = html5QrCodeRef.current;
+      if (!html5QrCode) return;
+
+      (async () => {
+        try {
+          const state = html5QrCode.getState();
+          if (state === Html5QrcodeScannerState.SCANNING) {
+            await html5QrCode.stop();
+          }
+          await html5QrCode.clear();
+        } catch (err) {
+          console.warn("cleanup error:", err);
+        }
+      })();
     };
   }, [scanStartOn]);
 
