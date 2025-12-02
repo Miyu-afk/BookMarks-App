@@ -49,22 +49,25 @@ const Scanner = ({ scanStartOn, onClose, setGetIsbn }: ScannerProps) => {
       .catch((err) => console.error("スキャン開始エラー:", err));
 
     return () => {
-      const html5QrCode = html5QrCodeRef.current;
-      if (!html5QrCode) return;
+      if (html5QrCodeRef.current) {
+        const qr = html5QrCodeRef.current;
+        const state = qr.getState();
 
-      (async () => {
-        try {
-          const state = html5QrCode.getState();
-          if (state === Html5QrcodeScannerState.SCANNING) {
-            await html5QrCode.stop();
-          }
-          await html5QrCode.clear();
-        } catch (err) {
-          console.warn("cleanup error:", err);
+        if (state === Html5QrcodeScannerState.SCANNING) {
+          qr.stop()
+            .then(() => qr.clear())
+            .catch((err) => {
+              console.warn("stopのエラー:", err);
+              qr.clear();
+            });
+        } else {
+          qr.clear();
         }
-      })();
+      }
     };
   }, [scanStartOn]);
+
+
 
   return (
     <div className="fixed inset-0 bg-white flex-col items-center justify-center">
